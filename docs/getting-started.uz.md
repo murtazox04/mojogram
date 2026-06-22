@@ -1,9 +1,12 @@
 # Tez boshlash
 
 Avval toolchain'ni o'rnating ([O'rnatish](install.md)), keyin
-[@BotFather](https://t.me/BotFather)'dan bot token oling.
+[@BotFather](https://t.me/BotFather)'ga yozib, `/newbot` buyrug'i bilan token
+oling. U `123456789:AAExxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx` ko'rinishida bo'ladi.
 
 ## Birinchi botingiz
+
+Buni `mybot.mojo` deb saqlang:
 
 ```mojo
 from std.os import getenv
@@ -21,52 +24,83 @@ def main() raises:
             handle(dp.context(Update(ups.at(i))))
 ```
 
+Ishga tushiring:
+
 ```bash
 export BOT_TOKEN="123456:your-token"
-mojo run -I /path/to/mojogram mybot.mojo
+pixi run mojo run -I . mybot.mojo
+# yoki uv bilan:  uv run mojo run -I . mybot.mojo
 ```
 
-## Qanday bog'lanib ketadi
+Botingizga `/start` yuboring va u javob beradi. mojogram botining butun shakli
+shu: bitta `handle` funksiya, va unga yangilanishlarni beradigan sikl.
 
-1. Siklni o'zingiz boshqarasiz. Yashirin sikl ham, handler registri ham yo'q.
-   `poll()` yoki `WebhookServer.next()`ni chaqirasiz va har yangilanishga o'z
-   handleringizni ishlatasiz.
-2. Bitta kontekst obyekti. Handleringiz bitta `UpdateContext` oladi. Unda bot,
-   yangilanish va FSM holati, hamda `ctx.answer(...)` kabi qisqartmalar bor.
-3. Yo'naltirish oddiy mantiq. Filtrlar ma'lumot, siz `if` va `elif` bilan
-   `Command("start").check(msg)`, `Text("hi").check(msg)` orqali tarmoqlaysiz.
+## Sikl nima qiladi
+
+`Poller.poll()` Telegram'ni long-poll qiladi va bir to'plam yangilanish
+qaytaradi. Siz to'plamni aylanasiz, har yangilanishni `UpdateContext`'ga o'rab,
+handleringizni chaqirasiz. Yashirin event sikl ham, dekorator registri ham yo'q;
+sikl o'qish va o'zgartirish uchun sizniki.
+
+`UpdateContext` handleringiz oladigan yagona obyekt. U bot, yangilanish va
+har-chat FSM holatini, hamda qisqartmalarni olib yuradi:
 
 ```mojo
+_ = ctx.answer("matn")                 # shu chatga yuborish
+_ = ctx.reply("matn")                  # kelgan xabarni iqtibos qilish
+_ = ctx.answer("*qalin*", "Markdown")  # parse rejim bilan
+_ = ctx.bot.send_message(other_chat, "istalgan chatga")   # to'liq Bot ctx.bot'da
+```
+
+## Yo'naltirish oddiy mantiq
+
+Filtrlar ma'lumot. Ularni `if` va `elif` bilan tekshirasiz, ular qamramagan har
+narsa esa oddiy kod:
+
+```mojo
+from mojogram import Command, Text
+
 def handle(ctx: UpdateContext) raises:
     if not ctx.is_message():
         return
     var msg = ctx.message()
     if Command("start").check(msg):
-        _ = ctx.answer("salom")
+        _ = ctx.answer("xush kelibsiz")
+    elif Text("ping").check(msg):
+        _ = ctx.answer("pong")
+    elif msg.from_user().id() == 12345678:        # o'zingizning admin tekshiruvi
+        _ = ctx.answer("salom admin")
     else:
-        _ = ctx.answer(msg.text())
+        _ = ctx.answer(msg.text())                 # qolgan hammasini echo
 ```
 
-Dekorator yo'q, sehr yo'q, await yo'q.
+Dekorator yo'q, sehr yo'q, `await` yo'q.
 
-## Javob berish
+## Tugma va uning callback'i
 
-```mojo
-_ = ctx.answer("matn")                       # shu chatga javob
-_ = ctx.reply("matn")                        # kelgan xabarni iqtibos qilib
-_ = ctx.answer("*qalin*", "Markdown")        # parse rejim bilan
-_ = ctx.bot.send_message(chat_id, "istalgan chatga")
-```
-
-## Callback'lar
+Inline tugmalar bosilganda callback query yuboradi. Unga javob bering (shunda
+mijoz aylanishni to'xtatadi) va uning `data`'siga qarab harakat qiling:
 
 ```mojo
+from mojogram import Command, InlineKeyboard
+
 def handle(ctx: UpdateContext) raises:
-    if ctx.is_callback():
+    if ctx.is_message() and Command("start").check(ctx.message()):
+        var kb = InlineKeyboard()
+        kb.button("Meni bos", "pressed")
+        _ = ctx.answer("Mana tugma", "", kb.as_markup())
+    elif ctx.is_callback():
         var cb = ctx.callback()
         ctx.ack("qabul qilindi")
-        # cb.data(), cb.message(), va hokazo
+        if cb.data() == "pressed":
+            _ = ctx.answer("tugmani bosdingiz")
 ```
 
-Keyin filtrlar, FSM, klaviaturalar va parallellik uchun
-[Qo'llanma](filters-and-fsm.md)ni yoki [API ma'lumotnoma](api-reference.md)ni o'qing.
+## Keyin qayerga
+
+- [Xabar va media yuborish](sending.md) — matn, fayl, albom, tahrirlash.
+- [Filtrlar, FSM va klaviaturalar](filters-and-fsm.md) — yo'naltirish va ko'p
+  bosqichli suhbatlar.
+- [Callback va inline rejim](callbacks-inline.md) — interaktiv botlar.
+- [Ishonchlilik va parallellik](reliability.md) — ishlab chiqarishga chiqqanda.
+- [API ma'lumotnoma](api-reference.md) — to'liq metodlar ro'yxati.

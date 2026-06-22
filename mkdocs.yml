@@ -65,6 +65,8 @@ nav:
       - Sending messages and media: sending.md
       - Filters, FSM and keyboards: filters-and-fsm.md
       - Callbacks and inline mode: callbacks-inline.md
+      - Polls, payments and admin: polls-payments.md
+      - Reliability and concurrency: reliability.md
   - Deployment: deployment.md
   - API reference: api-reference.md
   - Architecture: architecture.md
