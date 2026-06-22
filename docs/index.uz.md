@@ -1,4 +1,4 @@
-![mojogram, Mojo uchun Telegram bot frameworki](assets/banner.png){ width="520" }
+![mojogram, Mojo uchun Telegram bot frameworki](assets/banner.png){ width="640" }
 
 # mojogram
 
