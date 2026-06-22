@@ -11,129 +11,217 @@ from mojogram import JSON, Params, parse, quote, json_escape, substr
 from mojogram import Update, Message, CallbackQuery, User, Chat
 ```
 
-Reply-markup argumentlari JSON satrlar (builderning `as_markup()`'idan), tashlab
-ketish uchun `""`.
+Reply-markup argumentlari JSON satrlar, odatda builderning `as_markup()`'idan.
+Tashlab ketish uchun `""` bering. Quyidagi ixtiyoriy argumentlarning standart
+qiymati bor, shuning uchun faqat kerakligini o'rnatasiz.
 
 ## Poller
 
-`Poller(bot: Bot)`
-| Metod | Qaytaradi | Izoh |
-| ------ | ------- | ----- |
-| `poll(timeout: Int = 30)` | `JSON` | Bitta to'plamni long-poll qiladi; offsetni suradi. `.len()`/`.at(i)` bilan aylaning. |
-| `context(update: Update)` | `UpdateContext` | Yangilanishni bot va chatga bog'langan FSM bilan o'raydi. |
+`Poller(bot, allowed_updates="")`
 
-Odatdagi sikl:
-```mojo
-var dp = Poller(Bot(token))
-while True:
-    var ups = dp.poll()
-    for i in range(ups.len()):
-        handle(dp.context(Update(ups.at(i))))
-```
+| Metod | Qaytaradi | Izoh |
+| --- | --- | --- |
+| `poll(timeout=30)` | `JSON` | Bitta to'plamni long-poll qiladi va offsetni suradi. `.len()` / `.at(i)` bilan aylaning. |
+| `context(update, slot=0)` | `UpdateContext` | Yangilanishni bot va chatga bog'langan holat bilan o'raydi. `slot` parallel ishlar uchun ishchi id. |
 
 ## UpdateContext
 
-Maydonlar: `.bot: Bot`, `.update: Update`, `.state: State`
-| Metod | Qaytaradi |
-| ------ | ------- |
-| `is_message()` / `message()` | `Bool` / `Message` |
-| `is_callback()` / `callback()` | `Bool` / `CallbackQuery` |
-| `chat_id()` | `Int` |
-| `answer(text, parse_mode="", reply_markup="")` | `Message` |
-| `reply(text)` | `Message` (xabarni iqtibos qiladi) |
-| `ack(text="")` | callback query'ga javob beradi |
+Maydonlar: `.bot`, `.update`, `.state`.
+
+| Metod | Qaytaradi | Izoh |
+| --- | --- | --- |
+| `is_message()` / `message()` | `Bool` / `Message` | |
+| `is_callback()` / `callback()` | `Bool` / `CallbackQuery` | |
+| `chat_id()` | `Int` | |
+| `answer(text, parse_mode="", reply_markup="")` | `Message` | Shu chatga yuborish. |
+| `reply(text)` | `Message` | Kelgan xabarni iqtibos qilish. |
+| `ack(text="")` | | Callback query'ga javob berish. |
 
 ## Bot
 
 `Bot(token, api_base="https://api.telegram.org", timeout=60)`
 
-Umumiy: `call(method, params: Params) -> JSON`, `call_raw(method, body_json) -> JSON`.
+### Akkaunt va yangilanishlar
 
-Akkaunt/yangilanishlar: `get_me()->User`, `log_out()->Bool`, `close_bot()->Bool`,
-`get_updates(offset, timeout=30, limit=100)->JSON`,
-`set_webhook(url, secret_token="")->Bool`, `delete_webhook(drop_pending=False)->Bool`,
-`get_webhook_info()->JSON`.
+| Metod | Qaytaradi |
+| --- | --- |
+| `get_me()` | `User` |
+| `log_out()` / `close_bot()` | `Bool` |
+| `get_updates(offset, timeout=30, limit=100, allowed_updates="")` | `JSON` |
+| `set_webhook(url, secret_token="", allowed_updates="")` | `Bool` |
+| `delete_webhook(drop_pending=False)` | `Bool` |
+| `get_webhook_info()` | `JSON` |
 
-Yuborish (aytilmagan bo'lsa `Message` qaytaradi):
-`send_message(chat_id, text, parse_mode="", reply_markup="", reply_to_message_id=0, disable_notification=False)`,
-`send_photo`, `send_document`, `send_video`, `send_audio`, `send_voice`,
-`send_sticker`, `send_location(chat_id, lat, lon)`, `send_dice(chat_id, emoji="")`,
-`send_chat_action(chat_id, action)->Bool`, `forward_message(chat_id, from_chat_id, message_id)`,
-`copy_message(...)->JSON`.
+### Yuborish
 
-Fayl yuklash (curl orqali multipart): `send_photo_file(chat_id, path, caption="")`,
-`send_document_file(...)`, `send_video_file(...)`, hammasi `Message` qaytaradi.
+Hammasi `Message` qaytaradi. Yuborish metodlari `reply_markup`,
+`reply_to_message_id` va `disable_notification` ham oladi.
 
-Tahrir/o'chirish: `edit_message_text(chat_id, message_id, text, parse_mode="", reply_markup="")`,
-`edit_message_caption(...)`, `edit_message_reply_markup(...)`,
-`delete_message(chat_id, message_id)->Bool`.
+| Metod | Izoh |
+| --- | --- |
+| `send_message(chat_id, text, parse_mode="", ...)` | Asosiysi. |
+| `send_photo(chat_id, photo, caption="")` | `photo` bu `file_id` yoki URL. |
+| `send_video` / `send_audio` / `send_voice` | `send_photo` bilan bir xil shakl. |
+| `send_document(chat_id, document, caption="")` | |
+| `send_sticker(chat_id, sticker)` | |
+| `send_location(chat_id, lat, lon)` | |
+| `send_dice(chat_id, emoji="")` | |
+| `send_chat_action(chat_id, action)` | `Bool` qaytaradi. "yozyapti" ko'rsatkichi. |
+| `forward_message(chat_id, from_chat_id, message_id)` | Sarlavhani saqlaydi. |
+| `copy_message(chat_id, from_chat_id, message_id)` | `JSON` qaytaradi. |
 
-Javob berish: `answer_callback_query(id, text="", show_alert=False)->Bool`,
-`answer_inline_query(id, results_json)->Bool`,
-`answer_pre_checkout_query(id, ok, error_message="")->Bool`.
+### Fayllar
 
-Chat boshqaruvi: `get_chat(chat_id)->Chat`, `get_chat_member_count(chat_id)->Int`,
-`get_chat_member(chat_id, user_id)->JSON`, `ban_chat_member`, `unban_chat_member`,
-`leave_chat`, `pin_chat_message`, `unpin_chat_message`,
-`approve_chat_join_request`, `decline_chat_join_request` (Bool).
+| Metod | Qaytaradi | Izoh |
+| --- | --- | --- |
+| `send_photo_file(chat_id, path, caption="")` | `Message` | Diskdan multipart yuklash. |
+| `send_document_file(chat_id, path, caption="")` | `Message` | |
+| `send_video_file(chat_id, path, caption="")` | `Message` | |
+| `send_media_group(chat_id, media_json)` | `JSON` | Albom. |
+| `get_file(file_id)` | `JSON` | Metama'lumot. |
+| `download_file(file_id, dest)` | `Bool` | getFile, keyin yuklab olish. |
 
-Media/fayllar: `send_media_group(chat_id, media_json)->JSON`,
-`get_file(file_id)->JSON`, `download_file(file_id, dest)->Bool` (getFile + yuklab olish),
-`send_photo_file`/`send_document_file`/`send_video_file(chat_id, path, caption="")->Message`.
+### Tahrirlash va o'chirish
 
-Buyruqlar: `set_my_commands(commands_json)->Bool`, `delete_my_commands()->Bool`,
-`get_my_commands()->JSON`.
+| Metod | Qaytaradi |
+| --- | --- |
+| `edit_message_text(chat_id, message_id, text, parse_mode="", reply_markup="")` | `Message` |
+| `edit_message_caption(chat_id, message_id, caption, ...)` | `Message` |
+| `edit_message_reply_markup(chat_id, message_id, reply_markup)` | `Message` |
+| `edit_message_media(chat_id, message_id, media_json, reply_markup="")` | `Message` |
+| `delete_message(chat_id, message_id)` | `Bool` |
 
-Transport tarmoq/5xx xatolarni avtomatik qayta uradi (linear backoff) va 429
-`retry_after`'ni hurmat qiladi; doimiy 4xx xatolar darhol ko'tariladi.
+### Query'larga javob
+
+| Metod | Qaytaradi |
+| --- | --- |
+| `answer_callback_query(id, text="", show_alert=False)` | `Bool` |
+| `answer_inline_query(id, results_json)` | `Bool` |
+| `answer_pre_checkout_query(id, ok, error_message="")` | `Bool` |
+| `answer_shipping_query(id, ok, error_message="")` | `Bool` |
+
+### Chat boshqaruvi
+
+| Metod | Qaytaradi |
+| --- | --- |
+| `get_chat(chat_id)` | `Chat` |
+| `get_chat_member_count(chat_id)` | `Int` |
+| `get_chat_member(chat_id, user_id)` | `JSON` |
+| `ban_chat_member(chat_id, user_id)` | `Bool` |
+| `unban_chat_member(chat_id, user_id)` | `Bool` |
+| `leave_chat(chat_id)` | `Bool` |
+| `pin_chat_message(chat_id, message_id)` | `Bool` |
+| `unpin_chat_message(chat_id, message_id=0)` | `Bool` |
+| `approve_chat_join_request(chat_id, user_id)` | `Bool` |
+| `decline_chat_join_request(chat_id, user_id)` | `Bool` |
+| `create_forum_topic(chat_id, name)` | `JSON` |
+| `delete_forum_topic(chat_id, message_thread_id)` | `Bool` |
+
+### So'rovnoma, reaksiya, to'lov
+
+| Metod | Qaytaradi |
+| --- | --- |
+| `send_poll(chat_id, question, options, quiz=False, correct_option_id=-1, ...)` | `Message` |
+| `set_message_reaction(chat_id, message_id, emoji, is_big=False)` | `Bool` |
+| `send_invoice(chat_id, title, description, payload, currency, prices_json, ...)` | `Message` |
+| `create_invoice_link(title, description, payload, currency, prices_json, ...)` | `String` |
+| `refund_star_payment(user_id, charge_id)` | `Bool` |
+| `get_my_star_balance()` | `JSON` |
+
+### Buyruqlar va stikerlar
+
+| Metod | Qaytaradi |
+| --- | --- |
+| `set_my_commands(commands_json)` | `Bool` |
+| `delete_my_commands()` | `Bool` |
+| `get_my_commands()` | `JSON` |
+| `get_sticker_set(name)` | `JSON` |
+
+### Umumiy
+
+| Metod | Qaytaradi | Izoh |
+| --- | --- | --- |
+| `call(method, params)` | `JSON` | `params` bu `Params` builder. Istalgan metodga yetadi. |
+| `call_raw(method, body_json)` | `JSON` | JSON tana allaqachon tayyor bo'lganda. |
+
+Transport tarmoq va 5xx xatolarni qayta uradi va 429 `retry_after`'ni hurmat
+qiladi. Doimiy 4xx xatolar darhol ko'tariladi.
 
 ## Filtrlar
 
-Factorylar `Match` qaytaradi; `.check(msg) -> Bool` chaqiring:
-`Command`, `Commands`, `Text`, `StartsWith`, `EndsWith`, `Contains`,
-`ContentType`, `ContentTypes`, `ChatType`. Oddiy `if`/`elif` bilan tuzing.
+Har factory `Match` qaytaradi; `.check(msg) -> Bool` chaqiring. Ularni oddiy
+`if` / `elif` bilan tuzing.
 
-## FSM
+| Factory | Qachon mos keladi |
+| --- | --- |
+| `Command("start")` | matn `/start`, `/start@bot`, yoki `/start arg` |
+| `Commands(["a", "b"])` | matn `/a` yoki `/b` |
+| `Text("hi")` | matn aynan `hi` |
+| `StartsWith("/pay")` | matn `/pay` bilan boshlanadi |
+| `EndsWith("?")` | matn `?` bilan tugaydi |
+| `Contains("http")` | matnda `http` bor |
+| `ContentType("photo")` | kontent turi mos keladi |
+| `ContentTypes([...])` | kontent turi shulardan biri |
+| `ChatType("private")` | chat turi mos keladi |
 
-`StateStore()`. `State` (`ctx.state` orqali):
-`get_state()->String`, `set_state(s)`, `clear()`, `set_data(k, v)`,
-`get_data(k, default="")->String`. `group(group, state)->String`.
+## State (FSM)
+
+`StateStore()` backend; `State` esa `ctx.state`'dagi har-chat handle.
+
+| Metod | Qaytaradi |
+| --- | --- |
+| `get_state()` | `String` |
+| `set_state(s)` | |
+| `clear()` | |
+| `set_data(key, value)` | |
+| `get_data(key, default="")` | `String` |
+| `group(name, state)` | `String` (holatni nomlaydi) |
 
 ## Klaviaturalar
 
-`InlineKeyboard()`: `button(text, callback_data="", url="")`, `next_row()`, `as_markup()->String`.
-`ReplyKeyboard(resize=True, one_time=False)`: `button(text)`, `next_row()`, `as_markup()->String`.
-`reply_keyboard_remove()->String`, `force_reply()->String`.
+| Tur / metod | Qaytaradi |
+| --- | --- |
+| `InlineKeyboard()` | |
+| `.button(text, callback_data="", url="", web_app="", style="")` | |
+| `ReplyKeyboard(resize=True, one_time=False)` | |
+| `.button(text, request_contact=False, request_location=False)` | |
+| `.next_row()` | yangi qator boshlash |
+| `.as_markup()` | `String` (`reply_markup` sifatida bering) |
+| `reply_keyboard_remove()` / `force_reply()` | `String` |
 
 ## JSON
 
-`parse(text)->JSON`. `JSON` handle: `kind()`, `exists()`, `is_null()`,
-`as_int()`, `as_float()`, `as_bool()`, `as_string()`, `has(key)`, `get(key)->JSON`,
-`len()`, `at(i)->JSON`. `substr(s, start, end)->String`, `quote(s)`, `json_escape(s)`.
+| Funksiya / metod | Qaytaradi |
+| --- | --- |
+| `parse(text)` | `JSON` |
+| `.kind()` / `.exists()` / `.is_null()` | tur tekshiruvlari |
+| `.as_int()` / `.as_float()` / `.as_bool()` / `.as_string()` | qiymat |
+| `.has(key)` / `.get(key)` | `Bool` / `JSON` |
+| `.len()` / `.at(i)` | massivga kirish |
+| `substr(s, start, end)` / `quote(s)` / `json_escape(s)` | `String` |
 
-`Params` (so'rov builderi): `put_str(k,v)`, `put_int(k,v)`, `put_bool(k,v)`,
-`put_raw(k, json)`, `build()->String`.
+`Params` so'rov tanasini quradi: `put_str`, `put_int`, `put_bool`,
+`put_raw` (allaqachon JSON bo'lgan qiymat), va `build() -> String`.
 
 ## Yordamchilar
 
-- `RateLimiter` `RateLimiter(rate=30.0, burst=30.0)`, `acquire()` `rate` msg/s
-  ostida qolish uchun bloklaydi (token bucket, thread-xavfsiz). Yuborishdan oldin
-  chaqiring.
-- `escape_html(s) -> String`, `parse_mode="HTML"` uchun `& < >`'ni qochiradi.
-- `escape_markdown(s) -> String`, MarkdownV2'ning band belgilarini backslash bilan qochiradi.
-- `Spinlock` `Spinlock()`, `acquire()`/`release()`; Atomic test-and-set, ulashsa bo'ladi.
-- `parallelize[worker](n)` (`std.algorithm`'dan): parallel to'plam. Thread-xavfsiz
-  transport uchun `dp.context(update, i)`'da indeksni slot sifatida bering.
+| Nomi | Izoh |
+| --- | --- |
+| `RateLimiter(rate=30.0, burst=30.0)`, `.acquire()` | Token bucket; tezlik ostida qolish uchun bloklaydi. Thread-xavfsiz. |
+| `escape_html(s)` | `parse_mode="HTML"` uchun `& < >` ni qochiradi. |
+| `escape_markdown(s)` | MarkdownV2 band belgilarini qochiradi. |
+| `Spinlock()`, `.acquire()` / `.release()` | Atomic test-and-set; ulashsa bo'ladi. |
+| `parallelize[worker](n)` | `std.algorithm`'dan. Indeksni slot sifatida bering. |
 
 ## Tiplar
 
+Har typed obyekt xom JSON'ini ham `.json.get("field")` orqali ochadi.
+
 | Tip | Accessorlar |
-| ---- | --------- |
-| `Update` | `update_id()`, `type()`, `has(k)`, `event(k)->JSON`, `has_message()`/`message()`, `edited_message()`, `channel_post()`, `callback_query()`, `inline_query()`, `poll()`, `poll_answer()`, `pre_checkout_query()`, `shipping_query()`, `my_chat_member()`, `chat_member()`, `chat_join_request()`, `chosen_inline_result()` |
-| `Message` | `message_id()`, `date()`, `text()`, `caption()`, `chat()`, `chat_id()`, `from_user()`, `reply_to_message()`, `has(k)`, `content_type()` |
+| --- | --- |
+| `Update` | `update_id()`, `type()`, `has(k)`, `event(k)`, `message()`, `edited_message()`, `channel_post()`, `callback_query()`, `inline_query()`, `poll()`, `pre_checkout_query()`, `shipping_query()`, `my_chat_member()`, `chat_member()`, `chat_join_request()` |
+| `Message` | `message_id()`, `date()`, `text()`, `caption()`, `chat()`, `chat_id()`, `from_user()`, `reply_to_message()`, `content_type()` |
 | `CallbackQuery` | `id()`, `data()`, `from_user()`, `message()`, `chat_id()`, `inline_message_id()` |
 | `User` | `id()`, `is_bot()`, `first_name()`, `last_name()`, `username()`, `language_code()`, `is_premium()`, `full_name()` |
 | `Chat` | `id()`, `type()`, `title()`, `username()`, `is_private()`, `is_group()` |
-
-Parse qilinmagan har qanday maydon istalgan typed obyektda `.json.get("field")`
-orqali yetib boriladi.
+| `InlineQuery` | `id()`, `query()`, `offset()`, `from_user()` |
