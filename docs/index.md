@@ -1,3 +1,5 @@
+![mojogram, a Telegram Bot framework for Mojo](assets/banner.png){ width="520" }
+
 # mojogram
 
 mojogram is a Telegram Bot framework written entirely in Mojo. There is no Python

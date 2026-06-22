@@ -1,3 +1,5 @@
+![mojogram, Mojo uchun Telegram bot frameworki](assets/banner.png){ width="520" }
+
 # mojogram
 
 mojogram butunlay Mojo tilida yozilgan Telegram bot frameworki. Unda Python yo'q.

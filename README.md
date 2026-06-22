@@ -1,4 +1,6 @@
-# mojogram
+<p align="center">
+  <img src="readme_image.png" alt="mojogram — Telegram Bot Framework for Mojo" width="440">
+</p>
 
 A Telegram Bot framework written in pure Mojo. No Python anywhere. It compiles
 clean and passes its test suite on Mojo 1.0.0b2 (MAX).
