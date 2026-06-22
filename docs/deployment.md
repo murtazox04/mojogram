@@ -64,7 +64,8 @@ Telegram needs to know where to POST. Point it at your domain, and set a secret
 token so only Telegram's requests are accepted:
 
 ```bash
-curl "https://api.telegram.org/bot$BOT_TOKEN/setWebhook?url=https://YOUR_DOMAIN&secret_token=YOUR_SECRET"
+curl "https://api.telegram.org/bot$BOT_TOKEN/setWebhook?\
+url=https://YOUR_DOMAIN&secret_token=YOUR_SECRET"
 ```
 
 Then construct the server with the same secret. It compares the value against

@@ -46,10 +46,12 @@ enough to stay under the rate.
 ```mojo
 from mojogram import RateLimiter
 
-var limiter = RateLimiter(rate=25.0, burst=25.0)   # 25 msg/s, a little under the cap
+# 25 msg/s, a little under the cap
+var limiter = RateLimiter(rate=25.0, burst=25.0)
 
 for chat_id in chat_ids:
-    limiter.acquire()                               # waits if we're going too fast
+    # waits if we're going too fast
+    limiter.acquire()
     _ = bot.send_message(chat_id, "broadcast")
 ```
 
@@ -72,7 +74,8 @@ var n = ups.len()
 @parameter
 def worker(i: Int):
     try:
-        handle(dp.context(Update(ups.at(i)), i))   # pass i as the slot
+        # pass i as the slot
+        handle(dp.context(Update(ups.at(i)), i))
     except e:
         print(e)
 

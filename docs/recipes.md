@@ -26,7 +26,8 @@ if ctx.is_message():
 
 ```mojo
 _ = ctx.bot.send_photo(chat_id, "https://example.com/cat.jpg", caption="a cat")
-_ = ctx.bot.send_photo_file(chat_id, "/tmp/chart.png")     # upload from disk
+# upload from disk
+_ = ctx.bot.send_photo_file(chat_id, "/tmp/chart.png")
 _ = ctx.bot.send_document_file(chat_id, "/tmp/report.pdf")
 ```
 
@@ -43,7 +44,8 @@ if ctx.is_message() and Command("menu").check(ctx.message()):
     _ = ctx.answer("Pick one", "", kb.as_markup())
 elif ctx.is_callback():
     var cb = ctx.callback()
-    ctx.ack()                                  # stop the button spinner
+    # stop the button spinner
+    ctx.ack()
     _ = ctx.answer("You chose " + cb.data())
 ```
 
@@ -59,7 +61,8 @@ if ctx.is_message() and Command("name").check(ctx.message()):
 elif ctx.is_message() and ctx.state.get_state() == "awaiting_name":
     var name = ctx.message().text()
     ctx.state.set_data("name", name)
-    ctx.state.clear()                          # done, drop the state
+    # done, drop the state
+    ctx.state.clear()
     _ = ctx.answer("Nice to meet you, " + name)
 ```
 
@@ -71,7 +74,8 @@ on each other. Chain more states for a multi-step form.
 Filters are data; an "is this an admin" check is just an `if`:
 
 ```mojo
-comptime ADMIN_ID = 12345678                 # your Telegram user id
+# your Telegram user id
+comptime ADMIN_ID = 12345678
 
 if ctx.is_message() and Command("shutdown").check(ctx.message()):
     if ctx.message().from_user().id() == ADMIN_ID:
@@ -89,7 +93,9 @@ if ctx.is_callback():
     var cb = ctx.callback()
     ctx.ack()
     var m = cb.message()
-    _ = ctx.bot.edit_message_text(m.chat_id(), m.message_id(), "You picked " + cb.data())
+    _ = ctx.bot.edit_message_text(
+        m.chat_id(), m.message_id(), "You picked " + cb.data()
+    )
 ```
 
 ## Show "typing..." before a slow reply
@@ -109,14 +115,16 @@ from mojogram import RateLimiter
 
 var limiter = RateLimiter(rate=25.0, burst=25.0)
 for uid in subscriber_ids:
-    limiter.acquire()                          # waits if we're going too fast
+    # waits if we're going too fast
+    limiter.acquire()
     _ = bot.send_message(uid, "Announcement")
 ```
 
 ## Take a Telegram Stars payment
 
 ```mojo
-var prices = String('[{"label":"Pro plan","amount":500}]')   # 500 Stars
+# 500 Stars
+var prices = String('[{"label":"Pro plan","amount":500}]')
 _ = ctx.bot.send_invoice(chat_id, "Pro", "One month", "sub_pro", "XTR", prices)
 # then approve checkout when Telegram asks:
 _ = ctx.bot.answer_pre_checkout_query(query_id, True)

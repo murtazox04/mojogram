@@ -43,7 +43,8 @@ ctx.state.set_state("email_kutilmoqda")
 var s = ctx.state.get_state()             # bo'sh bo'lsa ""
 ctx.state.set_data("email", "x@y.z")
 var e = ctx.state.get_data("email")       # standart ""
-ctx.state.clear()                         # shu chat holati va ma'lumotini o'chirish
+# shu chat holati va ma'lumotini o'chirish
+ctx.state.clear()
 ```
 
 Ikki bosqichli forma:
@@ -78,9 +79,11 @@ from mojogram import InlineKeyboard, ReplyKeyboard
 
 var kb = InlineKeyboard()
 kb.button("Ochish", url="https://example.com")        # url tugma
-kb.button("Ovoz", "vote:up")                            # callback tugma
+# callback tugma
+kb.button("Ovoz", "vote:up")
 kb.button("O'chirish", "del", style="danger")           # qizil (Bot API 9.4)
-kb.button("Mini app", web_app="https://example.com")    # Mini App ochadi
+# Mini App ochadi
+kb.button("Mini app", web_app="https://example.com")
 _ = ctx.answer("birini tanlang", "", kb.as_markup())
 ```
 
@@ -104,7 +107,8 @@ var n = ups.len()
 @parameter
 def worker(i: Int):
     try:
-        handle(dp.context(Update(ups.at(i)), i))   # i ni slot sifatida bering
+        # i ni slot sifatida bering
+        handle(dp.context(Update(ups.at(i)), i))
     except e:
         print(e)
 

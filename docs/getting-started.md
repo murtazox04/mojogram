@@ -47,9 +47,11 @@ update, and the per-chat FSM state, plus shortcuts:
 
 ```mojo
 _ = ctx.answer("text")                 # send to the same chat
-_ = ctx.reply("text")                  # quote the incoming message
+# quote the incoming message
+_ = ctx.reply("text")
 _ = ctx.answer("*bold*", "Markdown")   # with a parse mode
-_ = ctx.bot.send_message(other_chat, "anywhere")   # the full Bot is on ctx.bot
+# the full Bot is on ctx.bot
+_ = ctx.bot.send_message(other_chat, "anywhere")
 ```
 
 ## Routing is plain control flow
@@ -68,10 +70,12 @@ def handle(ctx: UpdateContext) raises:
         _ = ctx.answer("welcome")
     elif Text("ping").check(msg):
         _ = ctx.answer("pong")
-    elif msg.from_user().id() == 12345678:        # your own admin check
+    # your own admin check
+    elif msg.from_user().id() == 12345678:
         _ = ctx.answer("hello admin")
     else:
-        _ = ctx.answer(msg.text())                 # echo everything else
+        # echo everything else
+        _ = ctx.answer(msg.text())
 ```
 
 No decorators, no magic, no `await`.

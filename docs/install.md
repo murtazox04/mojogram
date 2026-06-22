@@ -37,7 +37,8 @@ and every mainstream Linux. You can check it at startup with `curl_available()`.
 
 ```bash
 export BOT_TOKEN="123456:your-token"
-pixi run echo        # or: uv run mojo run -I . examples/echo_bot.mojo
+# or: uv run mojo run -I . examples/echo_bot.mojo
+pixi run echo
 pixi run form
 pixi run keyboard
 pixi run webhook

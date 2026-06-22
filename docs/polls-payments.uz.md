@@ -16,10 +16,13 @@ _ = ctx.bot.send_poll(
     "Qaysi biri Mojo kalit so'zi?",
     ["def", "func", "method"],
     quiz=True,
-    correct_option_id=0,        # variantlarga noldan boshlangan indeks
+    # variantlarga noldan boshlangan indeks
+    correct_option_id=0,
 )
 
-_ = ctx.bot.send_poll(chat_id, "Istalganini tanlang", ["a", "b", "c"], allows_multiple_answers=True)
+_ = ctx.bot.send_poll(
+    chat_id, "Tanlang", ["a", "b", "c"], allows_multiple_answers=True
+)
 ```
 
 Quiz'ga to'g'ri `correct_option_id` kerak; `quiz=True`'ni standart `-1` bilan
@@ -44,13 +47,16 @@ JSON massivi, valyutaning eng kichik birligida.
 
 ```mojo
 # Telegram Stars: valyuta XTR, provider_token bo'sh qoldiriladi
-var prices = String('[{"label":"Pro tarif","amount":500}]')   # 500 Stars
+# 500 Stars
+var prices = String('[{"label":"Pro tarif","amount":500}]')
 _ = ctx.bot.send_invoice(
     chat_id, "Pro", "Bir oylik Pro", "sub_pro", "XTR", prices
 )
 
 # Chat invoyisi o'rniga ulashsa bo'ladigan havola
-var link = ctx.bot.create_invoice_link("Pro", "Bir oy", "sub_pro", "XTR", prices)
+var link = ctx.bot.create_invoice_link(
+    "Pro", "Bir oy", "sub_pro", "XTR", prices
+)
 ```
 
 To'lov jarayoni sizga ikkita query yangilanishi yuboradi. Ikkalasiga ham tez
@@ -79,14 +85,16 @@ Botingiz admin bo'lgan guruhlarda:
 ```mojo
 var chat = ctx.bot.get_chat(chat_id)
 var count = ctx.bot.get_chat_member_count(chat_id)
-var member = ctx.bot.get_chat_member(chat_id, user_id)   # xom JSON: status, ruxsatlar
+# xom JSON: status, ruxsatlar
+var member = ctx.bot.get_chat_member(chat_id, user_id)
 
 _ = ctx.bot.ban_chat_member(chat_id, user_id)
 _ = ctx.bot.unban_chat_member(chat_id, user_id)
 _ = ctx.bot.leave_chat(chat_id)
 
 _ = ctx.bot.pin_chat_message(chat_id, msg.message_id())
-_ = ctx.bot.unpin_chat_message(chat_id)                  # message_id ixtiyoriy: oxirgisini yechadi
+# message_id ixtiyoriy: oxirgisini yechadi
+_ = ctx.bot.unpin_chat_message(chat_id)
 ```
 
 Qo'shilishni tasdiqlaydigan guruhlar uchun:

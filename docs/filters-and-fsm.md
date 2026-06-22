@@ -43,7 +43,8 @@ ctx.state.set_state("awaiting_email")
 var s = ctx.state.get_state()             # "" if none
 ctx.state.set_data("email", "x@y.z")
 var e = ctx.state.get_data("email")       # "" by default
-ctx.state.clear()                         # drop state and data for this chat
+# drop state and data for this chat
+ctx.state.clear()
 ```
 
 A two step form by hand:
@@ -78,9 +79,12 @@ from mojogram import InlineKeyboard, ReplyKeyboard
 
 var kb = InlineKeyboard()
 kb.button("Open", url="https://example.com")        # url button
-kb.button("Vote", "vote:up")                          # callback button
-kb.button("Delete", "del", style="danger")            # red (Bot API 9.4)
-kb.button("Mini app", web_app="https://example.com")  # opens a Mini App
+# callback button
+kb.button("Vote", "vote:up")
+# red (Bot API 9.4)
+kb.button("Delete", "del", style="danger")
+# opens a Mini App
+kb.button("Mini app", web_app="https://example.com")
 _ = ctx.answer("pick one", "", kb.as_markup())
 ```
 
@@ -104,7 +108,8 @@ var n = ups.len()
 @parameter
 def worker(i: Int):
     try:
-        handle(dp.context(Update(ups.at(i)), i))   # pass i as the slot
+        # pass i as the slot
+        handle(dp.context(Update(ups.at(i)), i))
     except e:
         print(e)
 

@@ -4,7 +4,8 @@
 from mojogram import Bot, Poller, UpdateContext
 from mojogram import Command, Commands, Text, StartsWith, EndsWith, Contains
 from mojogram import ContentType, ContentTypes, ChatType
-from mojogram import InlineKeyboard, ReplyKeyboard, reply_keyboard_remove, force_reply
+from mojogram import InlineKeyboard, ReplyKeyboard
+from mojogram import reply_keyboard_remove, force_reply
 from mojogram import StateStore, State, group
 from mojogram import JSON, Params, parse, quote, json_escape, substr
 from mojogram import Update, Message, CallbackQuery, User, Chat

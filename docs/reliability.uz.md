@@ -30,7 +30,8 @@ while True:
         try:
             handle(dp.context(Update(ups.at(i))))
         except e:
-            print("handler xatosi:", e)     # log qiling va xizmatda qoling
+            # log qiling va xizmatda qoling
+            print("handler xatosi:", e)
 ```
 
 Xato xabari Telegram'ning kodi va tavsifini olib keladi, masalan
@@ -48,10 +49,12 @@ bucket: `acquire()` tezlik ostida qolish uchun yetarlicha bloklaydi.
 ```mojo
 from mojogram import RateLimiter
 
-var limiter = RateLimiter(rate=25.0, burst=25.0)   # 25 msg/s, chegaradan bir oz past
+# 25 msg/s, chegaradan bir oz past
+var limiter = RateLimiter(rate=25.0, burst=25.0)
 
 for chat_id in chat_ids:
-    limiter.acquire()                               # juda tez ketsak, kutadi
+    # juda tez ketsak, kutadi
+    limiter.acquire()
     _ = bot.send_message(chat_id, "broadcast")
 ```
 
@@ -74,7 +77,8 @@ var n = ups.len()
 @parameter
 def worker(i: Int):
     try:
-        handle(dp.context(Update(ups.at(i)), i))   # i ni slot sifatida bering
+        # i ni slot sifatida bering
+        handle(dp.context(Update(ups.at(i)), i))
     except e:
         print(e)
 

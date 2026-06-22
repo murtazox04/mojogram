@@ -42,7 +42,8 @@ zimmangizda. `format` yordamchilari aynan shu uchun.
 ```mojo
 from mojogram import escape_html, escape_markdown
 
-var name = msg.from_user().first_name()        # ishonchsiz, < yoki * bo'lishi mumkin
+# ishonchsiz, < yoki * bo'lishi mumkin
+var name = msg.from_user().first_name()
 _ = ctx.answer("Salom <b>" + escape_html(name) + "</b>", "HTML")
 _ = ctx.answer("Salom *" + escape_markdown(name) + "*", "MarkdownV2")
 ```
@@ -61,7 +62,8 @@ Havola orqali, yuklashsiz:
 
 ```mojo
 _ = ctx.bot.send_photo(chat_id, "https://example.com/cat.jpg", caption="mushuk")
-_ = ctx.bot.send_video(chat_id, file_id)            # saqlagan id'ingizni qayta ishlatish
+# saqlagan id'ingizni qayta ishlatish
+_ = ctx.bot.send_video(chat_id, file_id)
 _ = ctx.bot.send_document(chat_id, file_id, caption="hisobot.pdf")
 _ = ctx.bot.send_audio(chat_id, file_id)
 _ = ctx.bot.send_voice(chat_id, file_id)
@@ -98,8 +100,10 @@ _ = ctx.bot.send_media_group(chat_id, media)
 
 ```mojo
 _ = ctx.bot.send_location(chat_id, 41.311, 69.240)   # Toshkent
-_ = ctx.bot.send_dice(chat_id, "🎯")                  # zar, dart, basketbol, ...
-_ = ctx.bot.send_chat_action(chat_id, "typing")      # "yozyapti..." ko'rsatkichi
+# zar, dart, basketbol, ...
+_ = ctx.bot.send_dice(chat_id, "🎯")
+# "yozyapti..." ko'rsatkichi
+_ = ctx.bot.send_chat_action(chat_id, "typing")
 ```
 
 `send_chat_action`'ni har qanday sekin javobdan oldin chaqirish foydali (model
@@ -109,8 +113,10 @@ ko'rsatadi, shunda chat muzlab qolgandek ko'rinmaydi.
 ## Yo'naltirish va nusxalash
 
 ```mojo
-_ = ctx.bot.forward_message(chat_id, from_chat_id, message_id)   # "kimdan yo'naltirilgan" sarlavhasini saqlaydi
-_ = ctx.bot.copy_message(chat_id, from_chat_id, message_id)      # toza nusxa, sarlavhasiz
+# "kimdan yo'naltirilgan" sarlavhasini saqlaydi
+_ = ctx.bot.forward_message(chat_id, from_chat_id, message_id)
+# toza nusxa, sarlavhasiz
+_ = ctx.bot.copy_message(chat_id, from_chat_id, message_id)
 ```
 
 ## Tahrirlash va o'chirish
@@ -124,7 +130,9 @@ var sent = ctx.answer("ishlayapman...")
 # ... ishni bajaramiz ...
 _ = ctx.bot.edit_message_text(chat_id, sent.message_id(), "tayyor")
 _ = ctx.bot.edit_message_caption(chat_id, sent.message_id(), "yangi izoh")
-_ = ctx.bot.edit_message_reply_markup(chat_id, sent.message_id(), kb.as_markup())
+_ = ctx.bot.edit_message_reply_markup(
+    chat_id, sent.message_id(), kb.as_markup()
+)
 _ = ctx.bot.edit_message_media(chat_id, sent.message_id(), media_json)
 _ = ctx.bot.delete_message(chat_id, sent.message_id())
 ```

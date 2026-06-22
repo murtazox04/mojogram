@@ -15,11 +15,14 @@ aks holda mijoz tugmada timeout bo'lguncha aylanuvchi belgini ko'rsatadi.
 def handle(ctx: UpdateContext) raises:
     if ctx.is_callback():
         var cb = ctx.callback()
-        ctx.ack()                         # aylanma belgini tozalaydi, popup yo'q
+        # aylanma belgini tozalaydi, popup yo'q
+        ctx.ack()
         if cb.data() == "vote:up":
             ctx.ack("Ovoz uchun rahmat")     # kichik toast
         elif cb.data() == "danger":
-            _ = ctx.bot.answer_callback_query(cb.id(), "Ishonchingiz komilmi?", show_alert=True)
+            _ = ctx.bot.answer_callback_query(
+                cb.id(), "Ishonchingiz komilmi?", show_alert=True
+            )
 ```
 
 `ctx.ack(text="")` qisqartma; `answer_callback_query` esa `show_alert=True`
@@ -34,8 +37,12 @@ menyuni joyida yangilash uchun tahrirlaydiganingiz:
 var cb = ctx.callback()
 ctx.ack()
 var m = cb.message()
-_ = ctx.bot.edit_message_text(m.chat_id(), m.message_id(), "tanladingiz: " + cb.data())
-_ = ctx.bot.edit_message_reply_markup(m.chat_id(), m.message_id(), new_kb.as_markup())
+_ = ctx.bot.edit_message_text(
+    m.chat_id(), m.message_id(), "tanladingiz: " + cb.data()
+)
+_ = ctx.bot.edit_message_reply_markup(
+    m.chat_id(), m.message_id(), new_kb.as_markup()
+)
 ```
 
 ### O'zini qayta yozadigan menyu
@@ -55,7 +62,9 @@ def handle(ctx: UpdateContext) raises:
         var cb = ctx.callback()
         ctx.ack("saqlandi")
         var m = cb.message()
-        _ = ctx.bot.edit_message_text(m.chat_id(), m.message_id(), "Saqlandi " + cb.data())
+        _ = ctx.bot.edit_message_text(
+            m.chat_id(), m.message_id(), "Saqlandi " + cb.data()
+        )
 ```
 
 `callback_data`'ni qisqa tuting. Telegram uni 64 baytda cheklaydi, shuning uchun
@@ -75,7 +84,8 @@ from mojogram import inline_article, inline_photo, inline_results
 
 def handle(ctx: UpdateContext) raises:
     if ctx.update.has("inline_query"):
-        var q = ctx.update.inline_query()      # InlineQuery: id(), query(), from_user()
+        # InlineQuery: id(), query(), from_user()
+        var q = ctx.update.inline_query()
         var text = q.query()
         var results = inline_results([
             inline_article("1", "Echo: " + text, "Siz terdingiz: " + text),
@@ -103,7 +113,7 @@ bilan so'rang:
 ```mojo
 var dp = Poller(
     Bot(token),
-    allowed_updates='["message","callback_query","inline_query","chosen_inline_result"]',
+    allowed_updates='["message","callback_query","inline_query"]',
 )
 ```
 

@@ -47,9 +47,11 @@ har-chat FSM holatini, hamda qisqartmalarni olib yuradi:
 
 ```mojo
 _ = ctx.answer("matn")                 # shu chatga yuborish
-_ = ctx.reply("matn")                  # kelgan xabarni iqtibos qilish
+# kelgan xabarni iqtibos qilish
+_ = ctx.reply("matn")
 _ = ctx.answer("*qalin*", "Markdown")  # parse rejim bilan
-_ = ctx.bot.send_message(other_chat, "istalgan chatga")   # to'liq Bot ctx.bot'da
+# to'liq Bot ctx.bot'da
+_ = ctx.bot.send_message(other_chat, "istalgan chatga")
 ```
 
 ## Yo'naltirish oddiy mantiq
@@ -68,10 +70,12 @@ def handle(ctx: UpdateContext) raises:
         _ = ctx.answer("xush kelibsiz")
     elif Text("ping").check(msg):
         _ = ctx.answer("pong")
-    elif msg.from_user().id() == 12345678:        # o'zingizning admin tekshiruvi
+    # o'zingizning admin tekshiruvi
+    elif msg.from_user().id() == 12345678:
         _ = ctx.answer("salom admin")
     else:
-        _ = ctx.answer(msg.text())                 # qolgan hammasini echo
+        # qolgan hammasini echo
+        _ = ctx.answer(msg.text())
 ```
 
 Dekorator yo'q, sehr yo'q, `await` yo'q.

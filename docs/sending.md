@@ -42,7 +42,8 @@ exist for exactly this.
 ```mojo
 from mojogram import escape_html, escape_markdown
 
-var name = msg.from_user().first_name()        # untrusted, may contain < or *
+# untrusted, may contain < or *
+var name = msg.from_user().first_name()
 _ = ctx.answer("Hi <b>" + escape_html(name) + "</b>", "HTML")
 _ = ctx.answer("Hi *" + escape_markdown(name) + "*", "MarkdownV2")
 ```
@@ -60,7 +61,8 @@ By reference, no upload:
 
 ```mojo
 _ = ctx.bot.send_photo(chat_id, "https://example.com/cat.jpg", caption="a cat")
-_ = ctx.bot.send_video(chat_id, file_id)            # reuse an id you stored
+# reuse an id you stored
+_ = ctx.bot.send_video(chat_id, file_id)
 _ = ctx.bot.send_document(chat_id, file_id, caption="report.pdf")
 _ = ctx.bot.send_audio(chat_id, file_id)
 _ = ctx.bot.send_voice(chat_id, file_id)
@@ -96,8 +98,10 @@ _ = ctx.bot.send_media_group(chat_id, media)
 
 ```mojo
 _ = ctx.bot.send_location(chat_id, 41.311, 69.240)   # Tashkent
-_ = ctx.bot.send_dice(chat_id, "🎯")                  # dice, darts, basketball, ...
-_ = ctx.bot.send_chat_action(chat_id, "typing")      # the "typing..." hint
+# dice, darts, basketball, ...
+_ = ctx.bot.send_dice(chat_id, "🎯")
+# the "typing..." hint
+_ = ctx.bot.send_chat_action(chat_id, "typing")
 ```
 
 `send_chat_action` is worth a call before any slow reply (a model response, a
@@ -107,8 +111,10 @@ chat doesn't look frozen.
 ## Forwarding and copying
 
 ```mojo
-_ = ctx.bot.forward_message(chat_id, from_chat_id, message_id)   # keeps the "forwarded from" header
-_ = ctx.bot.copy_message(chat_id, from_chat_id, message_id)      # a clean copy, no header
+# keeps the "forwarded from" header
+_ = ctx.bot.forward_message(chat_id, from_chat_id, message_id)
+# a clean copy, no header
+_ = ctx.bot.copy_message(chat_id, from_chat_id, message_id)
 ```
 
 ## Editing and deleting
@@ -121,7 +127,9 @@ var sent = ctx.answer("working...")
 # ... do the work ...
 _ = ctx.bot.edit_message_text(chat_id, sent.message_id(), "done")
 _ = ctx.bot.edit_message_caption(chat_id, sent.message_id(), "new caption")
-_ = ctx.bot.edit_message_reply_markup(chat_id, sent.message_id(), kb.as_markup())
+_ = ctx.bot.edit_message_reply_markup(
+    chat_id, sent.message_id(), kb.as_markup()
+)
 _ = ctx.bot.edit_message_media(chat_id, sent.message_id(), media_json)
 _ = ctx.bot.delete_message(chat_id, sent.message_id())
 ```

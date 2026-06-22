@@ -65,7 +65,8 @@ Telegram qayerga POST qilishni bilishi kerak. Uni domeningizga yo'naltiring va
 secret token o'rnating, shunda faqat Telegram'ning so'rovlari qabul qilinadi:
 
 ```bash
-curl "https://api.telegram.org/bot$BOT_TOKEN/setWebhook?url=https://YOUR_DOMAIN&secret_token=YOUR_SECRET"
+curl "https://api.telegram.org/bot$BOT_TOKEN/setWebhook?\
+url=https://YOUR_DOMAIN&secret_token=YOUR_SECRET"
 ```
 
 Keyin serverni o'sha secret bilan quring. U qiymatni Telegram'ning

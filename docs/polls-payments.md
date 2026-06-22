@@ -16,10 +16,13 @@ _ = ctx.bot.send_poll(
     "Which is a Mojo keyword?",
     ["def", "func", "method"],
     quiz=True,
-    correct_option_id=0,        # zero-based index into the options
+    # zero-based index into the options
+    correct_option_id=0,
 )
 
-_ = ctx.bot.send_poll(chat_id, "Pick any", ["a", "b", "c"], allows_multiple_answers=True)
+_ = ctx.bot.send_poll(
+    chat_id, "Pick any", ["a", "b", "c"], allows_multiple_answers=True
+)
 ```
 
 A quiz needs a valid `correct_option_id`; send `quiz=True` with the default `-1`
@@ -43,13 +46,16 @@ labeled amounts, in the currency's smallest unit.
 
 ```mojo
 # Telegram Stars: currency XTR, provider_token left empty
-var prices = String('[{"label":"Pro plan","amount":500}]')   # 500 Stars
+# 500 Stars
+var prices = String('[{"label":"Pro plan","amount":500}]')
 _ = ctx.bot.send_invoice(
     chat_id, "Pro", "One month of Pro", "sub_pro", "XTR", prices
 )
 
 # A shareable link instead of a chat invoice
-var link = ctx.bot.create_invoice_link("Pro", "One month", "sub_pro", "XTR", prices)
+var link = ctx.bot.create_invoice_link(
+    "Pro", "One month", "sub_pro", "XTR", prices
+)
 ```
 
 The checkout flow sends you two query updates. Answer both, fast (Telegram gives
@@ -78,14 +84,16 @@ In groups where your bot is an admin:
 ```mojo
 var chat = ctx.bot.get_chat(chat_id)
 var count = ctx.bot.get_chat_member_count(chat_id)
-var member = ctx.bot.get_chat_member(chat_id, user_id)   # raw JSON: status, permissions
+# raw JSON: status, permissions
+var member = ctx.bot.get_chat_member(chat_id, user_id)
 
 _ = ctx.bot.ban_chat_member(chat_id, user_id)
 _ = ctx.bot.unban_chat_member(chat_id, user_id)
 _ = ctx.bot.leave_chat(chat_id)
 
 _ = ctx.bot.pin_chat_message(chat_id, msg.message_id())
-_ = ctx.bot.unpin_chat_message(chat_id)                  # message_id optional: unpins the latest
+# message_id optional: unpins the latest
+_ = ctx.bot.unpin_chat_message(chat_id)
 ```
 
 For groups with join approval:
