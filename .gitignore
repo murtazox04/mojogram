@@ -1,0 +1,12 @@
+*.mojopkg
+*.mojoc
+.magic/
+.pixi/
+.venv/
+pixi.lock
+uv.lock
+*.egg-info/
+__pycache__/
+*.log
+.env
+site/

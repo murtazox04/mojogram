@@ -1,0 +1,59 @@
+site_name: mojogram
+site_description: A pure-Mojo Telegram Bot framework
+site_url: https://murtazox04.github.io/mojogram/
+repo_url: https://github.com/murtazox04/mojogram
+repo_name: mojogram
+
+theme:
+  name: material
+  language: en
+  features:
+    - navigation.tabs
+    - navigation.sections
+    - navigation.top
+    - content.code.copy
+    - search.suggest
+  palette:
+    - media: "(prefers-color-scheme: light)"
+      scheme: default
+      primary: indigo
+      toggle:
+        icon: material/weather-night
+        name: Dark mode
+    - media: "(prefers-color-scheme: dark)"
+      scheme: slate
+      primary: indigo
+      toggle:
+        icon: material/weather-sunny
+        name: Light mode
+
+markdown_extensions:
+  - admonition
+  - tables
+  - attr_list
+  - pymdownx.highlight
+  - pymdownx.superfences
+  - pymdownx.inlinehilite
+  - toc:
+      permalink: true
+
+plugins:
+  - search
+  - i18n:
+      docs_structure: suffix
+      languages:
+        - locale: en
+          default: true
+          name: English
+          build: true
+        - locale: uz
+          name: O'zbekcha
+          build: true
+
+nav:
+  - Home: index.md
+  - Install: install.md
+  - Quickstart: getting-started.md
+  - Guide: filters-and-fsm.md
+  - API: api-reference.md
+  - Architecture: architecture.md

@@ -1,0 +1,24 @@
+# Scale-out webhook deployment: nginx (TLS) → N mojogram workers.
+#   docker compose up --build --scale bot=3
+# Then register the webhook once:
+#   curl "https://api.telegram.org/bot$BOT_TOKEN/setWebhook?url=https://YOUR_DOMAIN"
+services:
+  bot:
+    build:
+      context: ..
+      dockerfile: deploy/Dockerfile
+    environment:
+      - BOT_TOKEN=${BOT_TOKEN}
+    expose:
+      - "8080"
+    # no host port — only nginx reaches it; scale with --scale bot=N
+
+  nginx:
+    image: nginx:alpine
+    depends_on:
+      - bot
+    ports:
+      - "443:443"
+    volumes:
+      - ./nginx.conf:/etc/nginx/nginx.conf:ro
+      - ./certs:/etc/nginx/certs:ro

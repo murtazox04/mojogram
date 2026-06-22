@@ -1,0 +1,40 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+jobs:
+  pixi:
+    name: pixi / ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [macos-14, ubuntu-latest]
+    runs-on: ${{ matrix.os }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: prefix-dev/setup-pixi@v0.8.1
+        with:
+          pixi-version: latest
+      - name: Build package
+        run: pixi run mojo precompile mojogram -o /tmp/mg.mojoc
+      - name: Tests
+        run: |
+          pixi run mojo run -I . tests/test_core.mojo
+          pixi run mojo run -I . tests/test_concurrency.mojo
+          pixi run mojo run -I . tests/test_json_edge.mojo
+          pixi run mojo run -I . tests/test_load.mojo
+
+  uv:
+    name: uv / macos-14
+    runs-on: macos-14
+    steps:
+      - uses: actions/checkout@v4
+      - uses: astral-sh/setup-uv@v5
+      - run: uv sync --python 3.11
+      - name: Build + test
+        run: |
+          uv run mojo precompile mojogram -o /tmp/mg.mojoc
+          uv run mojo run -I . tests/test_core.mojo

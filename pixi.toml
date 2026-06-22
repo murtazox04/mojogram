@@ -1,0 +1,19 @@
+[workspace]
+name = "mojogram"
+version = "0.3.0"
+description = "A pure-Mojo Telegram Bot framework"
+channels = ["conda-forge", "https://conda.modular.com/max"]
+platforms = ["osx-arm64", "linux-64"]
+
+[tasks]
+build = "mojo precompile mojogram -o mojogram.mojoc"
+test = "mojo run -I . tests/test_core.mojo"
+conc = "mojo run -I . tests/test_concurrency.mojo"
+webhook = "mojo run -I . examples/webhook_bot.mojo"
+echo = "mojo run -I . examples/echo_bot.mojo"
+form = "mojo run -I . examples/fsm_form_bot.mojo"
+keyboard = "mojo run -I . examples/inline_keyboard_bot.mojo"
+parallel = "mojo run -I . examples/parallel_bot.mojo"
+
+[dependencies]
+max = "*"

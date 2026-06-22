@@ -1,0 +1,15 @@
+[project]
+name = "mojogram"
+version = "0.4.0"
+description = "A pure-Mojo Telegram Bot framework"
+requires-python = ">=3.11"
+dependencies = ["mojo"]
+
+# Mojo 1.0 lives on Modular's nightly index. The stable index ships 0.26.x,
+# which uses the OLD syntax (fn/alias) and will NOT compile mojogram.
+[[tool.uv.index]]
+name = "modular"
+url = "https://whl.modular.com/nightly/simple/"
+
+[tool.uv.sources]
+mojo = { index = "modular" }
