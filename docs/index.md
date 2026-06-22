@@ -45,6 +45,11 @@ batch of updates and call your own handler on each one. Routing is plain `if` an
 - Optional parallel processing of an update batch, with no GIL.
 - A webhook server, retry with rate limit handling, a rate limiter, and i18n.
 
+In practice that covers command bots, multi-step forms, button menus, broadcasts,
+paid bots with Telegram Stars, group admin tools, and inline-mode bots. If you
+have a specific goal in mind, [How do I...?](recipes.md) maps common tasks to
+working code.
+
 ## Status
 
 mojogram builds with zero errors and zero warnings on both pixi and uv, passes

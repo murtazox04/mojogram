@@ -61,6 +61,7 @@ nav:
   - Home: index.md
   - Install: install.md
   - Quickstart: getting-started.md
+  - How do I...?: recipes.md
   - Guide:
       - Sending messages and media: sending.md
       - Filters, FSM and keyboards: filters-and-fsm.md

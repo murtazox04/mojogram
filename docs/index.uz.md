@@ -47,6 +47,11 @@ tezroq va to'liq tip tekshiruvidan o'tadi.
 - Yangilanishlar to'plamini ixtiyoriy parallel qayta ishlash, GIL'siz.
 - Webhook server, rate-limit bilan qayta urinish, rate limiter va i18n.
 
+Amalda bu buyruq botlari, ko'p bosqichli formalar, tugma menyulari, ommaviy
+yuborish, Telegram Stars bilan pullik botlar, guruh admin vositalari va inline
+rejim botlarini qoplaydi. Aniq maqsadingiz bo'lsa, [Qanday qilaman?](recipes.md)
+keng tarqalgan vazifalarni ishlaydigan kodga bog'laydi.
+
 ## Holat
 
 mojogram pixi va uv'da nol xato, nol ogohlantirish bilan quriladi, test
