@@ -2,20 +2,19 @@
 
 ## Ma'lumot oqimi
 
-```
-Telegram ──getUpdates──> Bot.get_updates ──curl──> Poller.poll()
-                                                         │ (offsetni suradi)
-   sizning kodingiz: ─────────────────────────────────────┤
-   har yangilanish uchun:  handle(dp.context(Update(...)))  │
-                          │                                ▼
-                          │                         UpdateContext{bot, update, state}
-                          ▼
-            filtrlar (ma'lumot) + sizning if/elif  ──>  Bot.<metod> ──curl──> Telegram
+```mermaid
+flowchart TD
+    TG([Telegram]) -->|getUpdates, curl orqali| POLL[Poller.poll<br/>offsetni suradi]
+    POLL --> CTX[UpdateContext<br/>bot, update, state]
+    CTX --> H{sizning handleringiz<br/>filtrlar ustida if / elif}
+    H -->|Bot.metod, curl orqali| TG
 ```
 
-Framework egalik qiladigan event sikl ham, handler registri ham yo'q. Siklni siz
-yozasiz; mojogram esa qismlarni beradi: transport, JSON, typed yangilanishlar,
-FSM, filtrlar va Bot API.
+Siz bir to'plam yangilanishni olasiz, har birini `UpdateContext`'ga o'rab, o'z
+handleringizni ishlatasiz. Handler ma'lumotli filtrlar bo'yicha tarmoqlanadi va
+botni qayta chaqiradi. Framework egalik qiladigan event sikl ham, handler
+registri ham yo'q: siklni siz yozasiz, mojogram esa qismlarni beradi (transport,
+JSON, typed yangilanishlar, FSM, filtrlar, Bot API).
 
 ## Qatlamlar
 

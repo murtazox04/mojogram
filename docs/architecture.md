@@ -2,20 +2,19 @@
 
 ## Data flow
 
-```
-Telegram ──getUpdates──> Bot.get_updates ──curl──> Poller.poll()
-                                                         │ (advances offset)
-   your code: ──────────────────────────────────────────┤
-   for each update:  handle(dp.context(Update(...)))      │
-                          │                                ▼
-                          │                         UpdateContext{bot, update, state}
-                          ▼
-            filters (data) + your if/elif  ──>  Bot.<method> ──curl──> Telegram
+```mermaid
+flowchart TD
+    TG([Telegram]) -->|getUpdates over curl| POLL[Poller.poll<br/>advances the offset]
+    POLL --> CTX[UpdateContext<br/>bot, update, state]
+    CTX --> H{your handler<br/>if / elif over data filters}
+    H -->|Bot.method over curl| TG
 ```
 
-There is **no framework-owned event loop and no handler registry**. You write the
-loop; mojogram supplies the pieces (transport, JSON, typed updates, FSM, filters,
-Bot API).
+You pull a batch of updates, wrap each one in an `UpdateContext`, and run your
+own handler on it. The handler branches on the data filters and calls back into
+the bot. There is no framework-owned event loop and no handler registry: you
+write the loop, and mojogram supplies the pieces (transport, JSON, typed
+updates, FSM, filters, the Bot API).
 
 ## Layers
 

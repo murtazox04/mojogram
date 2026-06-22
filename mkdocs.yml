@@ -32,8 +32,15 @@ markdown_extensions:
   - tables
   - attr_list
   - pymdownx.highlight
-  - pymdownx.superfences
   - pymdownx.inlinehilite
+  - pymdownx.details
+  - pymdownx.tabbed:
+      alternate_style: true
+  - pymdownx.superfences:
+      custom_fences:
+        - name: mermaid
+          class: mermaid
+          format: !!python/name:pymdownx.superfences.fence_code_format
   - toc:
       permalink: true
 
@@ -54,6 +61,10 @@ nav:
   - Home: index.md
   - Install: install.md
   - Quickstart: getting-started.md
-  - Guide: filters-and-fsm.md
-  - API: api-reference.md
+  - Guide:
+      - Sending messages and media: sending.md
+      - Filters, FSM and keyboards: filters-and-fsm.md
+      - Callbacks and inline mode: callbacks-inline.md
+  - Deployment: deployment.md
+  - API reference: api-reference.md
   - Architecture: architecture.md
