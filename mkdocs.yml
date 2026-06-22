@@ -56,6 +56,20 @@ plugins:
         - locale: uz
           name: O'zbekcha
           build: true
+          nav_translations:
+            Home: Bosh sahifa
+            Install: O'rnatish
+            Quickstart: Tez boshlash
+            How do I...?: Qanday qilaman?
+            Guide: Qo'llanma
+            Sending messages and media: Xabar va media yuborish
+            Filters, FSM and keyboards: Filtrlar, FSM va klaviaturalar
+            Callbacks and inline mode: Callback va inline rejim
+            Polls, payments and admin: So'rovnoma, to'lov va admin
+            Reliability and concurrency: Ishonchlilik va parallellik
+            Deployment: Joylashtirish
+            API reference: API ma'lumotnoma
+            Architecture: Arxitektura
 
 nav:
   - Home: index.md
